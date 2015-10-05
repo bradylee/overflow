@@ -1,0 +1,29 @@
+{
+    "manifest_version": 2,
+
+    "name": "Overflow",
+    "description": "Close old tabs that you no longer need",
+    "version": "1.0",
+
+    "browser_action": {
+        "default_icon": "icon.png",
+        "default_popup": "popup.html",
+	"default_title": "Close tabs"
+    },
+
+    "background": {
+        "scripts": ["eventPage.js"],
+        "persistent": false
+    },
+
+    "options_page": "options.html",
+
+    "permissions": [
+        "activeTab",
+        "tabs",
+        "storage",
+        "https://ajax.googleapis.com/"
+    ]
+
+}
+
