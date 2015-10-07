@@ -68,6 +68,13 @@ function addStateItem(state) {
 }
 
 function displayStateItem(state) {
+    var option = document.createElement('option');
+    option.text = state;
+    option.value = state;
+    var select = document.getElementById('state-selection');
+    select.appendChild(option);    
+
+    /*
     a = document.createElement('a');
     text = document.createTextNode(state);
     a.appendChild(text);
@@ -76,6 +83,7 @@ function displayStateItem(state) {
     a.addEventListener("click", function() { loadState(state) });
     document.body.appendChild(a);
     document.body.appendChild(document.createElement('br'));
+    */
 }
 
 function init() {
@@ -85,6 +93,10 @@ function init() {
     document.getElementById('save').addEventListener("click", function() {
         saveState('what')
     });
+
+    document.getElementById('state-name-form').addEventListener("submit", function(evt) {
+        
+
 
     storageLocation.get(
             {STATE_STORAGE}, 

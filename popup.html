@@ -12,30 +12,34 @@ body {
     font-family: "Segoe UI", "Lucida Grande", Tahoma, sans-serif;
     font-size: 100%;
 }
-      #status {
-          /* avoid an excessively wide status text */
-          white-space: pre;
-          text-overflow: ellipsis;
-          overflow: hidden;
-          max-width: 400px;
-      }
+#wrapper {
+    width: 200px;
+}
+#state-name-input {
+    margin-top: 10px;
+}
+#state-selection {
+    margin-top: 10px;
+}
         </style>
 
-        <!--
-            - JavaScript and HTML must be in separate files: see our Content Security
-            - Policy documentation[1] for details and explanation.
-            -
-            - [1]: https://developer.chrome.com/extensions/contentSecurityPolicy
-        -->
     </head>
     <body>
-        <div id="status">Hello</div>
+        <div id="wrapper">
+            <div id="menu">
+                <a href="#" id="save">Save</a><br />
+                <a href="#" id="clean">Clean</a><br />
+                <a href="#" id="erase">Erase</a><br />
+            </div>
 
-        <a href="#" id="clean">Clean</a>
-        <br />
-        <a href="#" id="save">Save</a>
-        <br /><br />
+            <form id="state-name-form">
+                <input type="text" id="state-name-input">
+            </form>
 
+            <select id="state-selection">
+            </select>
+
+        </div>
         <script src="popup.js"></script>
     </body>
 </html>
