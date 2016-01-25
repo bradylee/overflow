@@ -57,14 +57,12 @@ function add_domain(pattern) {
   //TODO: validity check
   //TODO: prevent duplicates
   DOMAINS = DOMAINS.concat(pattern);
-  console.log('added');
-  console.log(DOMAINS);
+  console.log('Added', pattern);
   save_domains();
 }
 
 function remove_domain(index) {
   //TODO: resize popup on remove
-  console.log(index);
   DOMAINS.splice(index, 1);
   save_domains();
 }
@@ -72,27 +70,24 @@ function remove_domain(index) {
 function print_domains() {
   var block = '<table>';
   for (var i = 0; i < DOMAINS.length; i++) {
-    console.log(DOMAINS.length);
     block = block.concat('<tr><td>', DOMAINS[i], '</td><td>',
       '<input type="button" class="remove-button" name="', i.toString(), '" value="x"></td></tr>');
   }
   block = block.concat('</table>');
-  //var block = '<table><tbody>' DOMAINS.join('\n');
-  console.log(block);
   $('#domain-container').html(block);
   setup_remove_buttons();
 }
 
 function load_domains() {
   chrome.storage.sync.get({SYNC_KEY}, function(items) {
-    console.log(items);
     if (items.SYNC_KEY == SYNC_KEY) {
       DOMAINS = [];
+      console.log('Creating new list');
     }
     else {
       DOMAINS = items.SYNC_KEY;
+      console.log('Loaded successfully');
     }
-    console.log(DOMAINS);
     print_domains();
   });
 }
@@ -100,7 +95,6 @@ function load_domains() {
 function save_domains() {
   chrome.storage.sync.set({SYNC_KEY: DOMAINS}, function() {
     console.log('Saved successfully');
-    console.log(DOMAINS);
     print_domains();
   });
 }
