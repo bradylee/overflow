@@ -6,7 +6,9 @@
   "version": "1.0",
 
   "icons": {
-    "16": "assets/icon.png"
+    "16": "assets/icon.png",
+    "48": "assets/icon_small.png",
+    "128": "assets/icon_medium.png"
   },
 
   "permissions": [
