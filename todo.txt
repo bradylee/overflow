@@ -1,0 +1,4 @@
+undo ability
+keep active page open
+options page
+icon update

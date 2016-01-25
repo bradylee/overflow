@@ -1,9 +1,10 @@
 {
   "manifest_version": 2,
 
-  "name": "Overflow",
-  "description": "Close old tabs that you no longer need",
-  "version": "1.0",
+  "name": "Overflow: Tab Manager",
+  "short_name": "Overflow",
+  "description": "Close old tabs that are no longer needed",
+  "version": "1.0.1",
 
   "icons": {
     "16": "assets/icon.png",
@@ -15,13 +16,11 @@
     "activeTab",
     "tabs",
     "storage"
-   // "https://ajax.googleapis.com/"
-    ],
-
-  "content_scripts": [
-  {
+  ],
+  
+  "content_scripts": [{
     "matches" : ["http://*/*", "https://*/*"],
-    "js" : ["source/js/jquery.min.js"]
+    "js" : ["source/external/js/jquery.min.js"]
   }],
 
   "browser_action": {
@@ -33,13 +32,5 @@
   "web_accessible_resources": ["assets/x.png"],
 
   "options_page": "source/html/options.html"
-
-  /*
-  "background": {
-    "scripts": ["background.js"],
-    "persistent": false
-  }
-*/
-
 }
 
