@@ -2,3 +2,7 @@ undo ability
 keep active page open
 options page
 icon update
+json to increase speed?
+alphabetize list
+prevent duplicate urls
+close duplicate tabs
