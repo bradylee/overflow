@@ -1,6 +1,7 @@
-var SYNC_KEY = 'urls';
+var SYNC_KEY = '__OVERFLOW_DOMAINS__';
 var DOMAINS;
-//var DOMAINS = ['https://www.google.com/*', 'http://stackoverflow.com/*'];
+
+//chrome.storage.sync.clear();
 
 function get_target_tabs(urls, callback) {
   chrome.tabs.query({url: urls}, callback);
@@ -79,13 +80,17 @@ function print_domains() {
 }
 
 function load_domains() {
+  start = new Date().getTime();
   chrome.storage.sync.get({SYNC_KEY}, function(items) {
     if (items.SYNC_KEY == SYNC_KEY) {
       DOMAINS = [];
       console.log('Creating new list');
     }
     else {
-      DOMAINS = items.SYNC_KEY;
+      //DOMAINS = items.SYNC_KEY;
+      DOMAINS = JSON.parse(items.SYNC_KEY);
+      end = new Date().getTime();
+      console.log(end - start);
       console.log('Loaded successfully');
     }
     print_domains();
@@ -93,7 +98,8 @@ function load_domains() {
 }
 
 function save_domains() {
-  chrome.storage.sync.set({SYNC_KEY: DOMAINS}, function() {
+  //chrome.storage.sync.set({SYNC_KEY: DOMAINS}, function() {
+  chrome.storage.sync.set({SYNC_KEY: JSON.stringify(DOMAINS)}, function() {
     console.log('Saved successfully');
     print_domains();
   });
