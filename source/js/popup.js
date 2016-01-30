@@ -57,7 +57,7 @@ function set_default_pattern() {
 function add_domain(pattern) {
   //TODO: validity check
   //TODO: prevent duplicates
-  DOMAINS = DOMAINS.concat(pattern);
+  DOMAINS = DOMAINS.concat(pattern).sort();
   console.log('Added', pattern);
   save_domains();
 }
@@ -80,17 +80,14 @@ function print_domains() {
 }
 
 function load_domains() {
-  start = new Date().getTime();
   chrome.storage.sync.get({SYNC_KEY}, function(items) {
     if (items.SYNC_KEY == SYNC_KEY) {
       DOMAINS = [];
       console.log('Creating new list');
     }
     else {
-      //DOMAINS = items.SYNC_KEY;
-      DOMAINS = JSON.parse(items.SYNC_KEY);
-      end = new Date().getTime();
-      console.log(end - start);
+      DOMAINS = items.SYNC_KEY;
+      //DOMAINS = JSON.parse(items.SYNC_KEY);
       console.log('Loaded successfully');
     }
     print_domains();
@@ -98,8 +95,8 @@ function load_domains() {
 }
 
 function save_domains() {
-  //chrome.storage.sync.set({SYNC_KEY: DOMAINS}, function() {
-  chrome.storage.sync.set({SYNC_KEY: JSON.stringify(DOMAINS)}, function() {
+  chrome.storage.sync.set({SYNC_KEY: DOMAINS}, function() {
+  //chrome.storage.sync.set({SYNC_KEY: JSON.stringify(DOMAINS)}, function() {
     console.log('Saved successfully');
     print_domains();
   });
