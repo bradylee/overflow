@@ -1,5 +1,6 @@
 var SYNC_KEY = '__OVERFLOW_URLS__';
 var URLS;
+var FILE_DOMAIN = 'file:///';
 
 //chrome.storage.sync.clear();
 
@@ -71,28 +72,51 @@ function setup_remove_buttons() {
 }
 
 function set_default_pattern() {
-  // TODO: does not handle chrome:// domain correctly
+  // fill user input with pattern that includes current domain only
   chrome.tabs.query(
       {currentWindow: true, active: true},
       function(tabs) {
         var url = tabs[0].url;
-        // start search after first dot to avoid catching https://
-        var search_start = url.indexOf('.');
-        // get domain by removing text after forward slash
-        var pattern = url.slice(0, url.indexOf('/', search_start) + 1);
-        $('#pattern-input').val(pattern.concat('*'));
+        var pattern = '';
+        if (url) {
+          var search_index = url.indexOf(':')
+          var prefix = url.slice(0, search_index);
+          if (prefix == 'http' || prefix == 'https') {
+            // jump to beginning of domain name
+            search_index += 3;
+            // remove text after first forward slash to get domain pattern
+            var slice_end = url.indexOf('/', search_index) + 1;
+            pattern = url.slice(0, slice_end).concat('*');
+          }
+          else if (prefix == 'file') {
+            pattern = FILE_DOMAIN; 
+          }
+          // chrome:// domains and others are not valid
+        }
+        $('#pattern-input').val(pattern);
       });
+}
+
+function is_valid_url(pattern) {
+  if (!pattern)
+    return false;
+  return true;
 }
 
 function add_url(pattern) {
   //TODO: validity check
-  if (URLS.length == 0 || binary_search(URLS, pattern) < 0) {
-    URLS = URLS.concat(pattern).sort();
-    console.log('Added', pattern);
-    save_urls();
+  if (is_valid_url(pattern)) {
+    if (URLS.length == 0 || binary_search(URLS, pattern) < 0) {
+      URLS = URLS.concat(pattern).sort();
+      console.log('Added', pattern);
+      save_urls();
+    }
+    else {
+      console.log('Duplicate pattern not added', pattern);
+    }
   }
   else {
-    console.log('Duplicate pattern not added', pattern);
+    console.log('Invalid pattern not added', pattern);
   }
 }
 
@@ -115,7 +139,9 @@ function binary_search(arr, value) {
 
 function remove_url(index) {
   //TODO: resize popup on remove
+  var pattern = URLS[index];
   URLS.splice(index, 1);
+  console.log('Removed', pattern);
   save_urls();
 }
 
