@@ -3,7 +3,7 @@
 
   "name": "Overflow: Tab Manager",
   "short_name": "Overflow",
-  "description": "Close old tabs that are no longer needed",
+  "description": "Close unwanted tabs",
   "version": "1.0.1",
 
   "icons": {

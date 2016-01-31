@@ -56,10 +56,31 @@ function set_default_pattern() {
 
 function add_domain(pattern) {
   //TODO: validity check
-  //TODO: prevent duplicates
-  DOMAINS = DOMAINS.concat(pattern).sort();
-  console.log('Added', pattern);
-  save_domains();
+  if (DOMAINS.length == 0 || binary_search(DOMAINS, pattern) < 0) {
+    DOMAINS = DOMAINS.concat(pattern).sort();
+    console.log('Added', pattern);
+    save_domains();
+  }
+  else {
+    console.log('Duplicate pattern not added', pattern);
+  }
+}
+
+function binary_search(arr, value) {
+  var low = 0;
+  var high = arr.length - 1;
+  var mid;
+  while (low <= high) {
+    mid = Math.floor((high + low) / 2);
+    item = arr[mid];
+    if (item === value)
+      return mid;
+    else if (item > value)
+      low = mid + 1;
+    else
+      high = mid - 1;
+  }
+  return -1;
 }
 
 function remove_domain(index) {
