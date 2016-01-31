@@ -1,10 +1,38 @@
-var SYNC_KEY = '__OVERFLOW_DOMAINS__';
-var DOMAINS;
+var SYNC_KEY = '__OVERFLOW_URLS__';
+var URLS;
 
 //chrome.storage.sync.clear();
 
 function get_target_tabs(urls, callback) {
   chrome.tabs.query({url: urls}, callback);
+}
+
+function get_duplicate_tabs(callback) {
+  chrome.tabs.query({}, function(tabs) {
+    if (tabs.length > 1) {
+      tabs.sort(compare_tab_urls);
+      var duplicates = [];
+      var len = tabs.length;
+      var current;
+      for (var i = 1; i < len; i++) {
+        current = tabs[i-1];
+        if (current.url === tabs[i].url) {
+          duplicates.push(current);
+        }
+      }
+      if (callback)
+        callback(duplicates);
+    }
+  });
+}
+
+function compare_tab_urls(a, b) {
+  if (a.url < b.url) 
+    return -1;
+  else if (a.url > b.url)
+    return 1;
+  else
+    return 0;
 }
 
 function close_tabs(tabs) {
@@ -22,21 +50,23 @@ function setup() {
 function setup_close_button() {
   // setup close button 
   $('#close-image').click(function() {
-    get_target_tabs(DOMAINS, close_tabs);
+    if (URLS.length > 0)
+      get_target_tabs(URLS, close_tabs);
+    get_duplicate_tabs(close_tabs);
   });
 }
 
 function setup_submit_button() {
   // setup submit button
   $('#submit-button').click(function() {
-    add_domain($('#pattern-input').val());
+    add_url($('#pattern-input').val());
   });
 }
 
 function setup_remove_buttons() {
   // setup remove buttons
   $('.remove-button').click(function(e) {
-    remove_domain(parseInt(e.target.name));
+    remove_url(parseInt(e.target.name));
   });
 }
 
@@ -54,12 +84,12 @@ function set_default_pattern() {
       });
 }
 
-function add_domain(pattern) {
+function add_url(pattern) {
   //TODO: validity check
-  if (DOMAINS.length == 0 || binary_search(DOMAINS, pattern) < 0) {
-    DOMAINS = DOMAINS.concat(pattern).sort();
+  if (URLS.length == 0 || binary_search(URLS, pattern) < 0) {
+    URLS = URLS.concat(pattern).sort();
     console.log('Added', pattern);
-    save_domains();
+    save_urls();
   }
   else {
     console.log('Duplicate pattern not added', pattern);
@@ -73,26 +103,26 @@ function binary_search(arr, value) {
   while (low <= high) {
     mid = Math.floor((high + low) / 2);
     item = arr[mid];
-    if (item === value)
-      return mid;
+    if (item < value)
+      high = mid - 1;
     else if (item > value)
       low = mid + 1;
     else
-      high = mid - 1;
+      return mid;
   }
   return -1;
 }
 
-function remove_domain(index) {
+function remove_url(index) {
   //TODO: resize popup on remove
-  DOMAINS.splice(index, 1);
-  save_domains();
+  URLS.splice(index, 1);
+  save_urls();
 }
 
-function print_domains() {
+function print_urls() {
   var block = '<table>';
-  for (var i = 0; i < DOMAINS.length; i++) {
-    block = block.concat('<tr><td>', DOMAINS[i], '</td><td>',
+  for (var i = 0; i < URLS.length; i++) {
+    block = block.concat('<tr><td>', URLS[i], '</td><td>',
       '<input type="button" class="remove-button" name="', i.toString(), '" value="x"></td></tr>');
   }
   block = block.concat('</table>');
@@ -100,32 +130,29 @@ function print_domains() {
   setup_remove_buttons();
 }
 
-function load_domains() {
+function load_urls() {
   chrome.storage.sync.get({SYNC_KEY}, function(items) {
     if (items.SYNC_KEY == SYNC_KEY) {
-      DOMAINS = [];
+      URLS = [];
       console.log('Creating new list');
     }
     else {
-      DOMAINS = items.SYNC_KEY;
-      //DOMAINS = JSON.parse(items.SYNC_KEY);
+      URLS = items.SYNC_KEY;
       console.log('Loaded successfully');
     }
-    print_domains();
+    print_urls();
   });
 }
 
-function save_domains() {
-  chrome.storage.sync.set({SYNC_KEY: DOMAINS}, function() {
-  //chrome.storage.sync.set({SYNC_KEY: JSON.stringify(DOMAINS)}, function() {
+function save_urls() {
+  chrome.storage.sync.set({SYNC_KEY: URLS}, function() {
     console.log('Saved successfully');
-    print_domains();
+    print_urls();
   });
 }
 
 window.onload = function() {
   setup();
-  load_domains();
-  //chrome.storage.sync.clear(function() {console.log('cleared')});
+  load_urls();
 };
 

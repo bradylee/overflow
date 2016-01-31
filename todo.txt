@@ -1,9 +1,8 @@
-undo ability
 keep active page open
 options page
 - allow not sync
-icon update
-close duplicate tabs
+undo ability
 info on how url is interpreted
 possible save different states (eg work, home)
-
+error messages (eg invalid url, tried to add duplicate)
+icon update
