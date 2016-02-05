@@ -4,7 +4,7 @@
   "name": "Overflow: Tab Manager",
   "short_name": "Overflow",
   "description": "Close unwanted tabs",
-  "version": "1.0.2",
+  "version": "1.0.3",
 
   "icons": {
     "16": "assets/icon.png",

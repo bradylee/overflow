@@ -1,6 +1,5 @@
 keep active page open
 options page
-- allow not sync
 undo ability
 info on how url is interpreted
 possible save different states (eg work, home)
